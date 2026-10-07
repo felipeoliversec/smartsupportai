@@ -2,6 +2,12 @@ from fastapi import FastAPI, HTTPException
 from fastapi.responses import FileResponse
 from pydantic import BaseModel, Field
 from model import analisar_mensagem
+from fastapi.testclient import TestClient
+
+from main import app
+
+client = TestClient(app)
+
 
 app = FastAPI(title="SmartSupport AI", version="1.0.0")
 
