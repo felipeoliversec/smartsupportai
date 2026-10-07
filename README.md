@@ -1,4 +1,4 @@
-# SmartSupport AI — laboratório interdisciplinar de 2 horas
+# SmartSupport AI
 
 MVP para demonstrar IA, Engenharia de Software, Qualidade de Software,
 gestão de projeto e transformação digital em uma única prática.
