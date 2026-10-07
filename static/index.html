@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SmartSupport AI</title>
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      margin: 0; font-family: Arial, sans-serif; background: #f3f4f6;
+      min-height: 100vh; display: grid; place-items: center;
+    }
+    .card {
+      width: min(680px, 92%); background: white; padding: 32px;
+      border-radius: 16px; box-shadow: 0 10px 30px rgba(0,0,0,.08);
+    }
+    h1 { margin-bottom: 6px; }
+    p { color: #555; }
+    textarea {
+      width: 100%; min-height: 120px; padding: 14px; margin: 14px 0;
+      border: 1px solid #bbb; border-radius: 10px; font-size: 16px;
+    }
+    button {
+      width: 100%; padding: 14px; border: 0; border-radius: 10px;
+      font-size: 16px; cursor: pointer;
+    }
+    #resultado {
+      display: none; margin-top: 20px; padding: 18px;
+      background: #f7f7f7; border-radius: 10px;
+    }
+    .valor { font-weight: bold; }
+    .exemplos { font-size: 14px; }
+  </style>
+</head>
+<body>
+  <main class="card">
+    <h1>SmartSupport AI</h1>
+    <p>Classificador inteligente de mensagens de clientes.</p>
+
+    <label for="mensagem"><strong>Mensagem do cliente</strong></label>
+    <textarea id="mensagem" placeholder="Ex.: Meu produto chegou quebrado"></textarea>
+    <button onclick="analisar()">Analisar com IA</button>
+
+    <div id="resultado">
+      <p>Categoria: <span class="valor" id="categoria"></span></p>
+      <p>Prioridade: <span class="valor" id="prioridade"></span></p>
+      <p>Confiança: <span class="valor" id="confianca"></span></p>
+    </div>
+
+    <p class="exemplos">
+      Teste também: “meu cartão foi recusado”, “meu pedido não chegou”
+      ou “quero trocar meu produto”.
+    </p>
+  </main>
+
+<script>
+async function analisar() {
+  const mensagem = document.getElementById("mensagem").value.trim();
+
+  if (!mensagem) {
+    alert("Digite uma mensagem.");
+    return;
+  }
+
+  try {
+    const resposta = await fetch("/analisar", {
+      method: "POST",
+      headers: {"Content-Type": "application/json"},
+      body: JSON.stringify({mensagem})
+    });
+
+    const dados = await resposta.json();
+
+    if (!resposta.ok) {
+      alert(dados.detail || "Erro ao analisar.");
+      return;
+    }
+
+    document.getElementById("categoria").textContent = dados.categoria.toUpperCase();
+    document.getElementById("prioridade").textContent = dados.prioridade.toUpperCase();
+    document.getElementById("confianca").textContent =
+      Math.round(dados.confianca * 100) + "%";
+    document.getElementById("resultado").style.display = "block";
+  } catch (erro) {
+    alert("Não foi possível acessar a API.");
+  }
+}
+</script>
+</body>
+</html>
